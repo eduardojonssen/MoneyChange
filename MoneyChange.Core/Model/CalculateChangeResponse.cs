@@ -10,6 +10,8 @@ namespace MoneyChange.Core.Model {
 			this.OperationReport = new List<Report>();
 		}
 		public IDictionary<long, long> NumberOfCoinsByValue { get; set; }
+
+		public IDictionary<long, long> NumberOfBillsByValue { get; set; }
 		public long TotalAmount { get; set; }
 		public bool Success { get; set; }
 		public List<Report> OperationReport { get; set; }
