@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MoneyChange.Core.Processor {
+
 	internal static class ProcessorFactory {
 
 		public static AbstractProcessor Create(long amount) {
