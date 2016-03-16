@@ -11,7 +11,7 @@ namespace MoneyChange.Core.Processor {
 			return "Bill";
 		}
 
-		protected override List<long> GetUnitsList() {
+		internal override List<long> GetUnitsList() {
 
 			List<long> billsList = new List<long>() {
 					10000, 5000, 2000, 1000, 500, 200

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MoneyChange.Core.Processor;
+using MoneyChange.Core.DataContracts;
 
 
 namespace MoneyChange.Core {
@@ -22,27 +23,29 @@ namespace MoneyChange.Core {
 
 				long changeAmount = request.PaidAmountInCents - request.ProductAmountInCents;
 
-				BillProcessor billProcessor = new BillProcessor();
-				IDictionary<long, long> numberOfBills = billProcessor.Calculate(changeAmount);
+				
+				long remainingChange = changeAmount;
 
-				response.NumberOfBillsByValue = numberOfBills;
+				while (remainingChange != 0) {
+					AbstractProcessor processor = Processor.ProcessorFactory.Create(remainingChange);
 
-				long amountInBills = 0;
-				foreach (KeyValuePair<long, long> kv in numberOfBills) {
-					amountInBills += kv.Key * kv.Value;
+					if (processor == null) {
+
+						response.Success = false;
+						response.OperationReport.Add(new Report() { Field = "", Message = "Não foi possível processar o seu troco." });
+						return response;
+					}
+
+					IDictionary<long, long> processorChange = processor.Calculate(remainingChange);
+
+					ChangeData changeData = new ChangeData() { Name = processor.GetName(), ChangeDictionary = processorChange };
+					response.ChangeDataList.Add(changeData);
+
+					long processorChangeAmount = processorChange.Sum(x => x.Key * x.Value);
+					remainingChange -= processorChangeAmount;
 				}
-
-				long remainingChangeAmount = changeAmount - amountInBills;
-
-				if (remainingChangeAmount != 0) {
-					
-					CoinProcessor coinProcessor = new CoinProcessor();
-					IDictionary<long, long> numberOfCoins = coinProcessor.Calculate(remainingChangeAmount);
-					response.NumberOfCoinsByValue = numberOfCoins;
-				}
-
+				
 				response.TotalAmount = changeAmount;
-
 				response.Success = true;
 
 			}

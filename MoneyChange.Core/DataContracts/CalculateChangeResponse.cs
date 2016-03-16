@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyChange.Core.DataContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,9 @@ namespace MoneyChange.Core.Model {
 	public class CalculateChangeResponse {
 		public CalculateChangeResponse() {
 			this.OperationReport = new List<Report>();
+			this.ChangeDataList = new List<ChangeData>();
 		}
-		public IDictionary<long, long> NumberOfCoinsByValue { get; set; }
-
-		public IDictionary<long, long> NumberOfBillsByValue { get; set; }
+		public List<ChangeData> ChangeDataList { get; set; }	
 		public long TotalAmount { get; set; }
 		public bool Success { get; set; }
 		public List<Report> OperationReport { get; set; }

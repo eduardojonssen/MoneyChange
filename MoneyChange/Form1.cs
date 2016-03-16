@@ -1,4 +1,5 @@
 ﻿using MoneyChange.Core;
+using MoneyChange.Core.DataContracts;
 using MoneyChange.Core.Model;
 using System;
 using System.Collections.Generic;
@@ -47,9 +48,12 @@ namespace MoneyChange {
 				
 				StringBuilder builder = new StringBuilder();
 				builder.AppendFormat("Troco total: {0}\r\n", response.TotalAmount);
-				foreach (KeyValuePair<long, long> coin in response.NumberOfCoinsByValue)
+				foreach (ChangeData changeData in response.ChangeDataList)
 				{
-					builder.AppendFormat("Moedas de {0} centavos: {1}\r\n", coin.Key, coin.Value);	
+					builder.AppendFormat("Troco em {0}\r\n", changeData.Name);
+					foreach (KeyValuePair<long, long> kv in changeData.ChangeDictionary) {
+						builder.AppendFormat("{0} : {1}\r\n", kv.Key, kv.Value);		
+					}					
 				}
 
 				this.UxLblChangeAmount.Text = builder.ToString();

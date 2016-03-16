@@ -5,22 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MoneyChange.Core.Processor {
-	internal class CoinProcessor : AbstractProcessor {
-
-		public CoinProcessor() {}
-
+	internal class SilverProcessor : AbstractProcessor {
 		public override string GetName() {
-			return "Coin";
+			return "Silver";
 		}
 
 		internal override List<long> GetUnitsList() {
 
-			List<long> coinsList = new List<long>() {
-					100, 50, 25, 10, 5
+			List<long> silverList = new List<long>() {
+					100000, 50000
 				};
 
-			return coinsList;
+			return silverList;
 		}
-
 	}
 }

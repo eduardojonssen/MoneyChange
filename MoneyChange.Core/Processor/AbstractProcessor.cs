@@ -22,13 +22,16 @@ namespace MoneyChange.Core.Processor {
 			foreach (var unit in unitList.OrderByDescending(x => x)) {
 				long unitQuantity = amountLeft / unit;
 				amountLeft = amountLeft % unit;
-				unitDictionary.Add(unit, unitQuantity);
+				if (unitQuantity > 0) {
+
+					unitDictionary.Add(unit, unitQuantity);
+				}
 			}
 
 			return unitDictionary;
 		
 		}
-		protected abstract List<long> GetUnitsList();
+		internal abstract List<long> GetUnitsList();
 
 	}
 }
