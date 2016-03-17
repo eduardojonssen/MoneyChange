@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using MoneyChange.Core.Processor;
 using MoneyChange.Core.DataContracts;
+using MoneyChange.Core.Utility;
 
 
 namespace MoneyChange.Core {
 	public class MoneyChangeManager {
 		public CalculateChangeResponse CalculateChange(CalculateChangeRequest request) {
+
+			MoneyChangeLog.Log(request, "Request");
 
 			CalculateChangeResponse response = new CalculateChangeResponse();
 
@@ -25,7 +28,7 @@ namespace MoneyChange.Core {
 
 				
 				long remainingChange = changeAmount;
-
+				List<ChangeData> changeDataList = new List<ChangeData>();
 				while (remainingChange != 0) {
 					AbstractProcessor processor = Processor.ProcessorFactory.Create(remainingChange);
 
@@ -35,23 +38,27 @@ namespace MoneyChange.Core {
 						response.OperationReport.Add(new Report() { Field = "", Message = "Não foi possível processar o seu troco." });
 						return response;
 					}
-
+					
 					IDictionary<long, long> processorChange = processor.Calculate(remainingChange);
 
 					ChangeData changeData = new ChangeData() { Name = processor.GetName(), ChangeDictionary = processorChange };
-					response.ChangeDataList.Add(changeData);
+					changeDataList.Add(changeData);
 
 					long processorChangeAmount = processorChange.Sum(x => x.Key * x.Value);
 					remainingChange -= processorChangeAmount;
 				}
 				
 				response.TotalAmount = changeAmount;
+				response.ChangeDataList = changeDataList;
 				response.Success = true;
-
 			}
+				
 			catch (Exception ex) {
 				response.OperationReport.Add(new Report { Field = "", Message = "Não foi possível processar sua solicitação, por favor tente novamente." });
-				throw;
+				MoneyChangeLog.Log(ex.ToString(), "Exception");
+			}
+			finally {
+				MoneyChangeLog.Log(response, "Response");
 			}
 
 			return response;
