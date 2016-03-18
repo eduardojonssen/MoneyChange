@@ -56,7 +56,7 @@ namespace MoneyChange {
 					}					
 				}
 
-				this.UxLblChangeAmount.Text = builder.ToString();
+				this.UxTxtResult.Text = builder.ToString();
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);

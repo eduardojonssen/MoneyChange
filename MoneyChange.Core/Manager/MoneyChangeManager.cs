@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 using MoneyChange.Core.Processor;
 using MoneyChange.Core.DataContracts;
 using MoneyChange.Core.Utility;
+using Dlp.Framework.Container;
 
 
 namespace MoneyChange.Core {
 	public class MoneyChangeManager {
+
+		public MoneyChangeManager() {
+
+			IocFactory.Register(
+				Component.FromThisAssembly("MoneyChange.Core.Utility")
+				);
+		}
+
 		public CalculateChangeResponse CalculateChange(CalculateChangeRequest request) {
 
 			MoneyChangeLog.Log(request, "Request");
